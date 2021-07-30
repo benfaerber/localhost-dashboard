@@ -20,18 +20,19 @@ foreach ($raw_dirs as $dir) {
 
   <style>
     body {
-      background-color: #3b4252;
+      background-color: #2f3542;
       color: white;
       font-family: 'Fira Code', 'Courier New', Courier, monospace;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 250px;
+      height: 80vh;
     }
 
     h1 {
       font-size: 40px;
+      width: 270px;
     }
 
     ul {
@@ -49,12 +50,39 @@ foreach ($raw_dirs as $dir) {
     a {
       text-decoration: none;
       color: white;
+      text-shadow: none;
+      font-size: 20px;
     }
+
+    a:hover {
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff; 
+      font-size: 25px;
+    }
+
+    .ip {
+      margin-top: 0px;
+      font-size: 16px;
+    }
+
+    .fadeIn {
+      animation: fadeInAnim 1s;
+    }
+
+    @keyframes fadeInAnim {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
   </style>
 </head>
 
 <body>
-  <h1>Localhost</h1>
+  <h1 id="header">Localhost</h1>
   <ul>
     <?php foreach ($dirs as $dir) { ?>
       <a href="<?= $dir ?>">
@@ -62,19 +90,26 @@ foreach ($raw_dirs as $dir) {
       </a>
     <?php } ?>
   </ul>
-
   <script>
-    const as = document.getElementsByTagName('a');
-    for (const a of as) {
-      a.addEventListener('mouseenter', (e) => {
-        a.style = 'text-shadow: 0 0 5px #fff, 0 0 10px #fff; font-size: 25px';
-      })
+    const localIPAddress = `<?= exec('ipconfig getifaddr en0') ?>`;
+    const header = document.querySelector('#header');
+    const defaultText = header.innerHTML;
 
-      a.addEventListener('mouseleave', (e) => {
-        a.style = 'text-shadow: none; font-size: 20px';
-      })
+    const animate = () => {
+      header.classList.add('fadeIn');
+      setTimeout(() => header.classList.remove('fadeIn'), 1000);
     }
-  </script>
-</body>
 
+    header.addEventListener('mouseenter', () => {
+      header.innerHTML = localIPAddress;
+      animate();
+    });
+
+    header.addEventListener('mouseleave', () => {
+      header.innerHTML = defaultText
+      animate();
+    });
+  </script>
+
+</body>
 </html>
